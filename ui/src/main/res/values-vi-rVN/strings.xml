@@ -26,8 +26,8 @@
     <string name="submit">Áp dụng</string>
     <string name="age">Đã dùng</string>
     <string name="weight_label">Cân nặng</string>
-    <string name="most_common_profile">Cấu hình phổ biến:</string>
-    <string name="survey_comment">Lưu ý: Chỉ những dữ liệu trên màn hình này sẽ được tải lên ẩn danh. Mỗi cài đặt AAPS sẽ có một ID riêng. Bạn có thể gửi lại dữ liệu nếu thay đổi Cấu hình chính, nhưng hãy để ứng dụng chạy ít nhất một tuần để kết quả về thời gian trong phạm vi được hiển thị. Cảm ơn bạn đã đóng góp dữ liệu.</string>
+    <string name="most_common_profile">Hồ sơ phổ biến:</string>
+    <string name="survey_comment">Lưu ý: Chỉ những dữ liệu trên màn hình này sẽ được tải lên ẩn danh. Mỗi cài đặt AAPS sẽ có một ID riêng. Bạn có thể gửi lại dữ liệu nếu thay đổi hồ sơ chính, nhưng hãy để ứng dụng chạy ít nhất một tuần để kết quả về thời gian trong phạm vi được hiển thị. Cảm ơn bạn đã đóng góp dữ liệu.</string>
     <string name="glucose_type">Loại đường huyết</string>
     <string name="bg_other">Khác</string>
     <string name="bg_meter">Máy đo</string>
@@ -43,9 +43,9 @@
     <string name="site_man">Nam</string>
     <string name="site_woman">Nữ</string>
     <string name="site_child">Trẻ em</string>
-    <string name="user_profile">Cấu hình người dùng</string>
-    <string name="user_profile_description">Mô tả cấu hình người dùng được dùng để hiển thị các vị trí tiêm phổ biến nhất đối với nam, nữ hoặc trẻ em</string>
-    <string name="site_management">Cấu hình quản lý vị trí tiêm</string>
+    <string name="user_profile">Hồ sơ người dùng</string>
+    <string name="user_profile_description">Mô tả Hồ sơ người dùng được dùng để hiển thị các vị trí tiêm phổ biến nhất đối với nam, nữ hoặc trẻ em</string>
+    <string name="site_management">Hồ sơ quản lý vị trí tiêm</string>
     <string name="site_management_description">Tại đây bạn có thể chọn quản lý vị trí tiêm, vị trí cảm biến CGM hoặc cả hai. Thiết lập này sẽ được dùng để tự động hiển thị hộp thoại quản lý vị trí mỗi khi phát hiện mục nhập mới</string>
     <string name="select_site">Nhấn bên dưới để chọn vị trí</string>
     <string name="record_site_change">Ghi lại vị trí tiêm/cảm biến</string>
@@ -116,7 +116,7 @@
     <string name="show_loop_records">Hiện dữ liệu vòng lặp</string>
     <string name="show_hide_records">Ẩn dữ liệu vòng lặp</string>
     <!-- ProfileHelperActivity -->
-    <string name="profile1">Cấu hình 1</string>
+    <string name="profile1">Hồ sơ 1</string>
     <string name="profile2">Cấu hình 2</string>
     <string name="profile_type">Loại Cấu hình</string>
     <string name="basal_pct_from_tdd_label">% của liều nền</string>
