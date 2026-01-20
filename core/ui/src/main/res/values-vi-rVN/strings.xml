@@ -596,7 +596,7 @@
     <string name="location_not_found_title">Vị trí chưa được bật</string>
     <string name="location_not_found_message">Để phát hiện Bluetooth trên các thiết bị mới, cần bật dịch vụ vị trí. AAPS không theo dõi vị trí của bạn và có thể tắt dịch vụ vị trí sau khi ghép nối thành công.</string>
     <!--    Preferences -->
-    <string name="nav_plugin_preferences">Tùy chọn plugin</string>
+    <string name="nav_plugin_preferences">Cài đặt tùy chọn plugin</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Thiếu quyền nhắn tin SMS</string>
     <!-- About -->
