@@ -297,7 +297,7 @@
     <string name="buttonson_description">按鈕總是顯示在螢幕底部</string>
     <string name="largedisplay_description">大顯示</string>
     <string name="skin">外觀</string>
-    <string name="cannula_usage">使用情況：</string>
+    <string name="cannula_usage">使用量：</string>
     <!--    Iob-->
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">顯示持續通知，簡要概述您的循環正在執行的操作</string>
