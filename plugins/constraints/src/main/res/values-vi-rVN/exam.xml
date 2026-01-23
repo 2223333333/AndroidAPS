@@ -5,7 +5,7 @@
     <string name="dia_profile">Bạn nên đặt giá trị DIA trong Hồ sơ của mình.</string>
     <string name="dia_minimumis5h">Giá trị nhỏ nhất được phép là 5 giờ.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/SettingUpAaps/YourAapsProfile.html</string>
-    <string name="dia_meaningisequaltodiapump">Nếu bạn thấy giá trị DIA mà bạn đã sử dụng trên Pump trước khi dùng AAPS hoạt động tốt, thì không cần thay đổi giá trị này khi bắt đầu chạy vòng kín.</string>
+    <string name="dia_meaningisequaltodiapump">Nếu bạn thấy giá trị DIA mà bạn đã sử dụng trên Bơm trước khi dùng AAPS hoạt động tốt, thì không cần thay đổi giá trị này khi bắt đầu chạy vòng kín.</string>
     <string name="dia_valuemustbedetermined">Bạn nên tự xác định giá trị DIA phù hợp cho mình.</string>
     <string name="hypott_label">Hypo Temp-Target</string>
     <string name="hypott_whenhypott">Tại sao cần đặt mục tiêu tạm thời khi bị hạ đường huyết?</string>
@@ -15,9 +15,9 @@
     <string name="hypott_0basal">Để ngăn đường huyết giảm thấp khi đã có tốc độ liều nền tạm thời 0% đang chạy.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/TempTargets.html</string>
     <string name="pumpdisconnect_label">Các lý do ‘Ngắt kết nối bơm’ trong AAPS</string>
-    <string name="pumpdisconnect_unnecessary">Điều này không cần thiết vì insulin sẽ không được bơm khi bơm đã được ngắt kết nối vật lý.</string>
-    <string name="pumpdisconnect_missinginsulin">Nó ngăn AAPS tính toán lượng insulin không được bơm khi bơm đã ngắt kết nối vật lý.</string>
-    <string name="pumpdisconnect_notstop">Nó sẽ không dừng việc bơm insulin nếu bơm vẫn được kết nối với cơ thể bạn.</string>
+    <string name="pumpdisconnect_unnecessary">Điều này không cần thiết vì insulin sẽ không được tiêm khi bơm đã được ngắt kết nối vật lý.</string>
+    <string name="pumpdisconnect_missinginsulin">Nó ngăn AAPS tính toán lượng insulin không được tiêm khi bơm đã ngắt kết nối vật lý.</string>
+    <string name="pumpdisconnect_notstop">Nó sẽ không dừng việc tiêm insulin nếu bơm vẫn được kết nối với cơ thể bạn.</string>
     <string name="pumpdisconnect_openloop">Thao tác này sẽ chuyển AAPS sang chế độ vòng lặp mở (open loop).</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/DailyLifeWithAaps/AapsScreens.html#loop-status</string>
     <string name="objectives_label">Cài đặt AAPS</string>
