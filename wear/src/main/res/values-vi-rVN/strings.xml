@@ -267,7 +267,7 @@
     <string name="loop_status_lgs">Tạm ngừng khi đường huyết thấp</string>
     <string name="loop_status_disabled">Đã tắt vòng lặp</string>
     <string name="loop_status_suspended">Đã tạm dừng vòng lặp</string>
-    <string name="loop_status_disconnected">Pump đã ngắt kết nối</string>
+    <string name="loop_status_disconnected">Bơm đã ngắt kết nối</string>
     <string name="loop_status_superbolus">Superbolus</string>
     <string name="loop_status_unknown">Không xác định</string>
     <string name="loop_status_result">Kết quả vòng lặp</string>
