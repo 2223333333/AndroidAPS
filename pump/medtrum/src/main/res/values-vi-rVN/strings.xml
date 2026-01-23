@@ -3,7 +3,7 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Tích hợp Pump cho Medtrum Nano và Medtrum 300U</string>
+    <string name="medtrum_pump_description">Tích hợp Bơm Medtrum Nano và Medtrum 300U</string>
     <string name="medtrum_pump_setting">Cài đặt Pump Medtrum</string>
     <string name="pump_error">Lỗi Pump: %1$s !! </string>
     <string name="pump_warning">Cảnh báo Pump: %1$s </string>
