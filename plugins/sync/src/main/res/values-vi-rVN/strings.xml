@@ -112,7 +112,7 @@
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Theo dõi và điều khiển AAPS từ đồng hồ WearOS.</string>
     <string name="no_watch_connected">(Không có đồng hồ kết nối)</string>
-    <string name="pump_status">Trạng thái Pump</string>
+    <string name="pump_status">Trạng thái Bơm</string>
     <string name="loop_status">Trạng thái vòng lặp</string>
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">Quickwizard đã chọn không còn khả dụng nữa, vui lòng làm mới ô của bạn</string>
@@ -196,7 +196,7 @@
     <string name="wear_action_loop_state_now_pump_suspended">Bơm đã tạm dừng</string>
     <string name="wear_action_loop_state_now_superbolus">Superbolus</string>
     <string name="wear_action_loop_state_now_invalid">Không hợp lệ</string>
-    <string name="wear_action_loop_state_now_pump_disconnected">Pump đã ngắt kết nối</string>
+    <string name="wear_action_loop_state_now_pump_disconnected">Bơm đã ngắt kết nối</string>
     <string name="garmin_request_key">Request Key</string>
     <string name="garmin_request_key_summary">Khóa tùy chọn giúp bảo mật kết nối HTTP giữa Garmin và AAPS.</string>
 </resources>
