@@ -648,7 +648,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
                     Intent(context, OHLoginActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     },
-                    PendingIntent.FLAG_IMMUTABLE
+                    0
                 )
             )
             .build()
