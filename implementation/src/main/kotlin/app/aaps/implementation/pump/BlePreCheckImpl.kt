@@ -26,21 +26,21 @@ class BlePreCheckImpl @Inject constructor(
 
     companion object {
 
-        private const val PERMISSION_REQUEST_COARSE_LOCATION = 30241 // arbitrary.
-        private const val PERMISSION_REQUEST_BLUETOOTH = 30242 // arbitrary.
+           private const val PERMISSION_REQUEST_COARSE_LOCATION = 30241 // arbitrary.
     }
 
+
+    override fun prerequisitesCheck(activity: AppCompatActivity): Boolean {
+        if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.message), rh.gs(app.aaps.core.ui.R.string.ble_not_supported))
+            return false
+        } else {
            // Use this check to determine whether BLE is supported on the device. Then
             // you can selectively disable BLE-related features.
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // your code that requires permission
                 ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_REQUEST_COARSE_LOCATION)
-        } else {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT), PERMISSION_REQUEST_BLUETOOTH)
-                return false
+                       return false
             }
             // change after SDK = 31+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -53,7 +53,8 @@ class BlePreCheckImpl @Inject constructor(
             }
 
             val bluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
-            // Ensures Bluetooth is available on the device and it is enabled.
+             // Ensures Bluetooth is available on the device and it is enabled. If not,
+            // displays a dialog requesting user permission to enable Bluetooth.
             bluetoothAdapter?.safeEnable(3000)
             if (bluetoothAdapter?.isEnabled != true) {
                 OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.message), rh.gs(app.aaps.core.ui.R.string.ble_not_enabled))
@@ -67,6 +68,7 @@ class BlePreCheckImpl @Inject constructor(
             }
         }
         return true
+        }
     
     /**
      * Determine if GPS is currently enabled.
@@ -97,6 +99,5 @@ class BlePreCheckImpl @Inject constructor(
         OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.location_not_found_title), rh.gs(app.aaps.core.ui.R.string.location_not_found_message), Runnable {
             activity.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
         })
-    }
     }
 }
