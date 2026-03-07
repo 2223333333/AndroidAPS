@@ -51,17 +51,22 @@ class AuthFlowOut @Inject constructor(
     }
 
     val authService: AuthorizationService =
-        AuthorizationService(
-            context, AppAuthConfiguration.Builder()
-                .setBrowserMatcher(
-                    BrowserAllowList(
-                        VersionedBrowserMatcher.CHROME_CUSTOM_TAB,
-                        VersionedBrowserMatcher.FIREFOX_CUSTOM_TAB,
-                        VersionedBrowserMatcher.SAMSUNG_CUSTOM_TAB
+    AuthorizationService(
+        context,
+        AppAuthConfiguration.Builder()
+            .setBrowserMatcher(
+                ExactBrowserMatcher(
+                    BrowserDescriptor(
+                        "com.tidbrowser",
+                        "",
+                        false,
+                        null,
+                        null
                     )
                 )
-                .build()
-        )
+            )
+            .build()
+    )
 
     enum class ConnectionStatus {
         NONE, BLOCKED, NOT_LOGGED_IN, NO_SESSION, FETCHING_TOKEN, SESSION_ESTABLISHED, FAILED
