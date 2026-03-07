@@ -22,6 +22,8 @@ import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
 import net.openid.appauth.browser.BrowserAllowList
 import net.openid.appauth.browser.VersionedBrowserMatcher
+import net.openid.appauth.browser.BrowserDescriptor
+import net.openid.appauth.browser.ExactBrowserMatcher
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import javax.inject.Inject
