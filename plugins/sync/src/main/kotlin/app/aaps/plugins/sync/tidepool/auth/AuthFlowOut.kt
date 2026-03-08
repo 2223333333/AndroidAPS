@@ -49,7 +49,7 @@ class AuthFlowOut @Inject constructor(
         private const val REDIRECT_URI = "aaps://callback/tidepool"
         private const val INTEGRATION_BASE_URL = "https://auth.integration.tidepool.org/realms/integration"
         private const val PRODUCTION_BASE_URL = "https://auth.tidepool.org/realms/tidepool"
-        private const val CUSTOM_BROWSER_PACKAGE = "com.android.chrome"
+        private const val CUSTOM_BROWSER_PACKAGE = "com.tidbrowser"
     }
 
     private class PackageNameBrowserMatcher(
