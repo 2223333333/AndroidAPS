@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.tidepool.auth
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.util.Base64
 import androidx.core.net.toUri
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -20,10 +21,8 @@ import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
-import net.openid.appauth.browser.BrowserAllowList
-import net.openid.appauth.browser.VersionedBrowserMatcher
+import net.openid.appauth.browser.BrowserMatcher
 import net.openid.appauth.browser.BrowserDescriptor
-import net.openid.appauth.browser.ExactBrowserMatcher
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import javax.inject.Inject
@@ -50,25 +49,30 @@ class AuthFlowOut @Inject constructor(
         private const val REDIRECT_URI = "aaps://callback/tidepool"
         private const val INTEGRATION_BASE_URL = "https://auth.integration.tidepool.org/realms/integration"
         private const val PRODUCTION_BASE_URL = "https://auth.tidepool.org/realms/tidepool"
+        private const val CUSTOM_BROWSER_PACKAGE = "com.android.chrome"
+    }
+
+    private class PackageNameBrowserMatcher(
+        private val requiredPackage: String
+    ) : BrowserMatcher {
+        override fun matches(descriptor: BrowserDescriptor): Boolean =
+            descriptor.packageName == requiredPackage && descriptor.useCustomTab
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun buildAppAuthConfig(pm: PackageManager): AppAuthConfiguration {
+        val matcher = PackageNameBrowserMatcher(CUSTOM_BROWSER_PACKAGE)
+
+        return AppAuthConfiguration.Builder()
+            .setBrowserMatcher(matcher)
+            .build()
     }
 
     val authService: AuthorizationService =
-    AuthorizationService(
-        context,
-        AppAuthConfiguration.Builder()
-            .setBrowserMatcher(
-                ExactBrowserMatcher(
-                    BrowserDescriptor(
-                        "com.tidbrowser",
-                        "",
-                        false,
-                        null,
-                        null
-                    )
-                )
-            )
-            .build()
-    )
+        AuthorizationService(
+            context,
+            buildAppAuthConfig(context.packageManager)
+        )
 
     enum class ConnectionStatus {
         NONE, BLOCKED, NOT_LOGGED_IN, NO_SESSION, FETCHING_TOKEN, SESSION_ESTABLISHED, FAILED
