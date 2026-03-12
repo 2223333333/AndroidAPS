@@ -20,8 +20,8 @@ import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
-import net.openid.appauth.browser.BrowserAllowList
-import net.openid.appauth.browser.VersionedBrowserMatcher
+import net.openid.appauth.browser.BrowserDescriptor
+import net.openid.appauth.browser.BrowserMatcher
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import javax.inject.Inject
@@ -48,19 +48,29 @@ class AuthFlowOut @Inject constructor(
         private const val REDIRECT_URI = "aaps://callback/tidepool"
         private const val INTEGRATION_BASE_URL = "https://auth.integration.tidepool.org/realms/integration"
         private const val PRODUCTION_BASE_URL = "https://auth.tidepool.org/realms/tidepool"
+        private const val CUSTOM_BROWSER_PACKAGE = "com.tidbrowser"
+    }
+
+    private class PackageNameBrowserMatcher(
+        private val packageName: String
+    ) : BrowserMatcher {
+        override fun matches(descriptor: BrowserDescriptor): Boolean =
+            descriptor.packageName == packageName && descriptor.useCustomTab
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun buildAppAuthConfiguration(pm: android.content.pm.PackageManager): AppAuthConfiguration {
+        val matcher = PackageNameBrowserMatcher(CUSTOM_BROWSER_PACKAGE)
+
+        return AppAuthConfiguration.Builder()
+            .setBrowserMatcher(matcher)
+            .build()
     }
 
     val authService: AuthorizationService =
         AuthorizationService(
-            context, AppAuthConfiguration.Builder()
-                .setBrowserMatcher(
-                    BrowserAllowList(
-                        VersionedBrowserMatcher.CHROME_CUSTOM_TAB,
-                        VersionedBrowserMatcher.FIREFOX_CUSTOM_TAB,
-                        VersionedBrowserMatcher.SAMSUNG_CUSTOM_TAB
-                    )
-                )
-                .build()
+            context,
+            buildAppAuthConfiguration(context.packageManager)
         )
 
     enum class ConnectionStatus {

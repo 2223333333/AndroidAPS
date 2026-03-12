@@ -3,7 +3,11 @@ package app.aaps.implementation.pump
 import android.Manifest
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
+import android.os.Build
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -25,6 +29,7 @@ class BlePreCheckImpl @Inject constructor(
 
     companion object {
 
+        private const val PERMISSION_REQUEST_COARSE_LOCATION = 30241 // arbitrary.
         private const val PERMISSION_REQUEST_BLUETOOTH = 30242 // arbitrary.
 
     }
@@ -35,11 +40,18 @@ class BlePreCheckImpl @Inject constructor(
             OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.message), rh.gs(app.aaps.core.ui.R.string.ble_not_supported))
             return false
         } else {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT), PERMISSION_REQUEST_BLUETOOTH)
-                return false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT), PERMISSION_REQUEST_BLUETOOTH)
+                    return false
+                }
+            } else {
+                if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_REQUEST_COARSE_LOCATION)
+                    return false
+                }
             }
 
             if (!checkAdditionalPermissions(additionalPermissions, activity)) {
@@ -53,8 +65,28 @@ class BlePreCheckImpl @Inject constructor(
                 OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.message), rh.gs(app.aaps.core.ui.R.string.ble_not_enabled))
                 return false
             }
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S && !isLocationEnabled(activity)) {
+                requestLocation(activity)
+                return false
+            }
         }
         return true
+    }
+
+    private fun isLocationEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+            locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    private fun requestLocation(activity: AppCompatActivity) {
+        if (isLocationEnabled(activity)) {
+            return
+        }
+
+        OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.location_not_found_title), rh.gs(app.aaps.core.ui.R.string.location_not_found_message), Runnable {
+            activity.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+        })
     }
 
 
