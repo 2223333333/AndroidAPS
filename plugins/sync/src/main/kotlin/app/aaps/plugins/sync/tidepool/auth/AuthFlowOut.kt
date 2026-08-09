@@ -20,8 +20,8 @@ import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
-import net.openid.appauth.browser.BrowserAllowList
-import net.openid.appauth.browser.VersionedBrowserMatcher
+import net.openid.appauth.browser.BrowserDescriptor
+import net.openid.appauth.browser.BrowserMatcher
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import javax.inject.Inject
@@ -29,7 +29,6 @@ import javax.inject.Singleton
 
 /**
  * JamOrHam
- *
  *
  * Handler for new style Tidepool openid auth
  */
@@ -43,25 +42,41 @@ class AuthFlowOut @Inject constructor(
 ) {
 
     companion object {
-
         private const val CLIENT_ID = "aaps"
         private const val REDIRECT_URI = "aaps://callback/tidepool"
         private const val INTEGRATION_BASE_URL = "https://auth.integration.tidepool.org/realms/integration"
         private const val PRODUCTION_BASE_URL = "https://auth.tidepool.org/realms/tidepool"
+        private const val CUSTOM_BROWSER_PACKAGE = "com.tidbrowser"
     }
 
+    /*
+     * Match TidBrowser by package name only.
+     *
+     * Requiring descriptor.useCustomTab was the problem: AppAuth sets it to
+     * true only when it can resolve a CustomTabsService in the browser
+     * package, and that detection is unreliable for the minimal
+     * TidCustomTabsService. When the flag is false the matcher never matches,
+     * AppAuth finds "no suitable browser" and the login is never handed over
+     * to TidBrowser.
+     *
+     * Matching on the package alone makes AppAuth route the auth request to
+     * TidBrowser via Custom Tabs when available and via plain ACTION_VIEW
+     * otherwise - both open the login screen inside TidBrowser.
+     */
+    private class PackageNameBrowserMatcher(
+        private val requiredPackage: String
+    ) : BrowserMatcher {
+        override fun matches(descriptor: BrowserDescriptor): Boolean =
+            descriptor.packageName == requiredPackage
+    }
+
+    private fun buildAppAuthConfig(): AppAuthConfiguration =
+        AppAuthConfiguration.Builder()
+            .setBrowserMatcher(PackageNameBrowserMatcher(CUSTOM_BROWSER_PACKAGE))
+            .build()
+
     val authService: AuthorizationService =
-        AuthorizationService(
-            context, AppAuthConfiguration.Builder()
-                .setBrowserMatcher(
-                    BrowserAllowList(
-                        VersionedBrowserMatcher.CHROME_CUSTOM_TAB,
-                        VersionedBrowserMatcher.FIREFOX_CUSTOM_TAB,
-                        VersionedBrowserMatcher.SAMSUNG_CUSTOM_TAB
-                    )
-                )
-                .build()
-        )
+        AuthorizationService(context, buildAppAuthConfig())
 
     enum class ConnectionStatus {
         NONE, BLOCKED, NOT_LOGGED_IN, NO_SESSION, FETCHING_TOKEN, SESSION_ESTABLISHED, FAILED
@@ -89,7 +104,6 @@ class AuthFlowOut @Inject constructor(
     }
 
     fun eraseAuthState(message: String?) {
-        //aapsLogger.debug(LTag.TIDEPOOL, "eraseAuthState")
         preferences.put(TidepoolStringNonKey.AuthState, "")
         initAuthState()
         updateConnectionStatus(ConnectionStatus.NONE, message)
@@ -98,11 +112,9 @@ class AuthFlowOut @Inject constructor(
     @Synchronized fun initAuthState() {
         authState = AuthState()
         try {
-            // Set from configuration if exists
             val serviceConfig = preferences.get(TidepoolStringNonKey.ServiceConfiguration)
             if (serviceConfig.isNotEmpty())
                 authState = AuthState(AuthorizationServiceConfiguration.fromJson(serviceConfig))
-            // Check if we have an authorized state
             val savedAuthState = preferences.get(TidepoolStringNonKey.AuthState)
             if (savedAuthState.isNotEmpty()) {
                 authState = AuthState.jsonDeserialize(savedAuthState)
@@ -118,13 +130,11 @@ class AuthFlowOut @Inject constructor(
 
     @Synchronized
     fun clearAllSavedData() {
-        //aapsLogger.debug(LTag.TIDEPOOL, "clearAllSavedData")
         preferences.put(TidepoolStringNonKey.ServiceConfiguration, "")
         eraseAuthState("Credentials cleared")
     }
 
     fun doTidePoolInitialLogin(@Suppress("unused") from: String) {
-        //aapsLogger.debug(LTag.TIDEPOOL, "doTidePoolInitialLogin $from")
         rxBus.send(EventTidepoolStatus(("Opening login screen")))
         AuthorizationServiceConfiguration.fetchFromIssuer(
             if (preferences.get(TidepoolBooleanKey.UseTestServers)) INTEGRATION_BASE_URL.toUri()
@@ -147,10 +157,10 @@ class AuthFlowOut @Inject constructor(
 
                 val authRequest =
                     AuthorizationRequest.Builder(
-                        serviceConfiguration,  // the authorization service configuration
-                        CLIENT_ID,  // the client ID, typically pre-registered and static
-                        ResponseTypeValues.CODE,  // the response_type value: we want a code
-                        REDIRECT_URI.toUri() // the redirect URI to which the auth response is sent
+                        serviceConfiguration,
+                        CLIENT_ID,
+                        ResponseTypeValues.CODE,
+                        REDIRECT_URI.toUri()
                     )
                         .setScopes("openid")
                         .setCodeVerifier(codeVerifier, codeChallenge, codeVerifierChallengeMethod)
