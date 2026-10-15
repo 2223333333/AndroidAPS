@@ -23,8 +23,8 @@ import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ResponseTypeValues
-import net.openid.appauth.browser.BrowserAllowList
-import net.openid.appauth.browser.VersionedBrowserMatcher
+import net.openid.appauth.browser.BrowserDescriptor
+import net.openid.appauth.browser.BrowserMatcher
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 
@@ -50,6 +50,7 @@ class AuthFlowOut(
         private const val REDIRECT_URI = "aaps://callback/tidepool"
         private const val INTEGRATION_BASE_URL = "https://auth.integration.tidepool.org/realms/integration"
         private const val PRODUCTION_BASE_URL = "https://auth.tidepool.org/realms/tidepool"
+        private const val CUSTOM_BROWSER_PACKAGE = "com.tidbrowser"
 
         /**
          * True when a token refresh failed only because of the network or the server. The saved
@@ -78,19 +79,20 @@ class AuthFlowOut(
      * `ExceptionInInitializerError` in every plain-JVM graph test once Metro started constructing this
      * class. Nothing needs it before the first authorization request.
      */
-    val authService: AuthorizationService by lazy {
-        AuthorizationService(
-            context, AppAuthConfiguration.Builder()
-                .setBrowserMatcher(
-                    BrowserAllowList(
-                        VersionedBrowserMatcher.CHROME_CUSTOM_TAB,
-                        VersionedBrowserMatcher.FIREFOX_CUSTOM_TAB,
-                        VersionedBrowserMatcher.SAMSUNG_CUSTOM_TAB
-                    )
-                )
-                .build()
-        )
+   private class PackageNameBrowserMatcher(
+        private val requiredPackage: String
+    ) : BrowserMatcher {
+        override fun matches(descriptor: BrowserDescriptor): Boolean =
+            descriptor.packageName == requiredPackage
     }
+
+    private fun buildAppAuthConfig(): AppAuthConfiguration =
+        AppAuthConfiguration.Builder()
+            .setBrowserMatcher(PackageNameBrowserMatcher(CUSTOM_BROWSER_PACKAGE))
+            .build()
+
+    val authService: AuthorizationService =
+        AuthorizationService(context, buildAppAuthConfig())
 
     enum class ConnectionStatus {
         NONE, BLOCKED, NOT_LOGGED_IN, NO_SESSION, FETCHING_TOKEN, SESSION_ESTABLISHED, FAILED
